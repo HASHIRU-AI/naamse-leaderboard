@@ -1,6 +1,7 @@
 name: Run Scenario
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'scenario.toml'
@@ -12,6 +13,7 @@ jobs:
     permissions:
       contents: write
       packages: read
+      actions: write
 
     steps:
       - name: Checkout
@@ -67,6 +69,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Add swap space for model loading
+        run: |
+          if [ ! -f /swapfile ]; then
+            sudo fallocate -l 4G /swapfile
+            sudo chmod 600 /swapfile
+            sudo mkswap /swapfile
+            sudo swapon /swapfile
+          else
+            echo "Swap already exists"
+          fi
+          free -h
 
       - name: Run assessment
         run: docker compose up --timestamps --no-color --exit-code-from agentbeats-client --abort-on-container-exit
