@@ -52,4 +52,13 @@ Submitters can modify these in `scenario.toml`.
 
 Participants need to provide `GOOGLE_API_KEY` as a GitHub Secret.
 
-The green agent uses `GOOGLE_API_KEY`, `LOG_LEVEL`, and `NAAMSE_RANDOM_SEED`.
+The green agent uses `GOOGLE_API_KEY`, `LOG_LEVEL`, and `NAAMSE_RANDOM_SEED` by default. 
+
+You can also override the models the engine uses by setting the following Optional Secrets:
+- `GEMINI_MODEL`: Global override model (default: `gemini-2.5-flash`)
+- `MUTATION_ENGINE_MODEL`: Specific override for the mutation engine
+- `BEHAVIORAL_ENGINE_MODEL`: Specific override for the behavioral engine
+- `HF_TOKEN`: Used for the HuggingFace judge
+- `INVOKE_AGENT_API_KEY`: Used to invoke the purple agent (defaults to `GOOGLE_API_KEY` if unset)
+
+*Note: If you add these overrides as Github Secrets, you must also map them explicitly inside `scenario.toml`'s `env = {...}` dictionary for them to be passed into the assessment container.*
